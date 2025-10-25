@@ -60,6 +60,37 @@ Everything you'd want to do in Arduino IDE can be done with VSCode + PlatformIO.
 
 You can also look at the platforms/ folder [here](https://github.com/FastLED/PlatformIO-Starter/tree/main/platforms) for platformio ini files that you can use to get the main sketch running for your specific board type.
 
+## Troubleshooting upload_port on Linux (ESP32-S3 / XIAO)
+
+If upload fails with "Please specify upload_port":
+
+1. Check that the board enumerates as a serial device
+  - Run:
+    - `ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null`
+    - `lsusb` (look for Espressif/Seeed; vendor `303a`)
+  - If you only see a mass-storage drive, press reset once to exit UF2 bootloader.
+
+2. Power and cable sanity
+  - Use a data-capable USB-C cable (not charge-only).
+  - Prefer a direct USB port (avoid unpowered hubs).
+  - Fix any Raspberry Pi undervoltage warnings; use a solid 5V/3A PSU.
+
+3. Tell PlatformIO the port (when detected)
+  - In `platformio.ini` under your environment add:
+    - `upload_port = /dev/ttyACM0`
+    - `monitor_port = /dev/ttyACM0`
+    - `monitor_speed = 115200`
+  - Or pass it once: `platformio run -e <env> -t upload --upload-port /dev/ttyACM0`
+
+4. Permissions (Linux)
+  - If you see "Permission denied" on `/dev/ttyACM0`:
+    - `sudo usermod -a -G dialout $USER` then log out/in or reboot.
+
+5. Still stuck?
+  - Double-tap reset to toggle UF2 bootloader, then single-tap to return to app.
+  - Try a different cable/port, or a powered hub.
+  - Open VS Code > PlatformIO > Devices to confirm the port.
+
 ## Stuck? Use ChatGPT or Claude
 
 It's worth noting that the LLM Chatbots have all been trained on platformio's `platformio.ini` file. Simply copy and paste your `platformio.ini` file into one of the chat bots then ask it to make modifications to run your board and it will probably work the first time.
