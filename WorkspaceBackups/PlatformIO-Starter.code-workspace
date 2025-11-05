@@ -2,6 +2,10 @@
 	"folders": [
 		{
 			"path": ".."
+		},
+		{
+			"name": "ESP32_FastLED",
+			"path": "../../Documents/PlatformIO/Projects/ESP32_FastLED"
 		}
 	],
 	"settings": {}
